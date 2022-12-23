@@ -1,4 +1,5 @@
 import { createConditional } from "./create-switch";
+import { describe, it, expect } from "vitest"
 
 describe("createConditional", () => {
   it("should return value by condition", () => {

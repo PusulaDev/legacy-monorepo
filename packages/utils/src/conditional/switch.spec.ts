@@ -1,4 +1,5 @@
 import { createSwitch } from "./create-switch";
+import { describe, it, expect } from "vitest"
 
 describe("createSwitch", () => {
   it("should get correct value", () => {

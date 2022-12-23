@@ -1,4 +1,6 @@
 import { domUtil } from "./dom.util";
+import { describe, it, expect } from "vitest"
+
 describe("Dom Utils", () => {
   it.each([
     [100, 240, 30, 340, true],

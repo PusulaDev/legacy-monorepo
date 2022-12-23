@@ -1,15 +1,16 @@
 import { extendArray } from "./extend-array";
 import { GroupModel, GroupItem } from "../../data-group/data-group.interface";
+import { describe, it, expect } from "vitest"
 
 describe("extended array functions", () => {
   extendArray();
 
-  test("last", () => {
+  it("last", () => {
     let items: number[] = [1, 2, 3];
     expect(items.last()).toEqual(3);
   });
 
-  test("pushRange", () => {
+  it("pushRange", () => {
     let items: number[] = [1, 2];
 
     items.pushRange([3, 4]);
@@ -17,14 +18,14 @@ describe("extended array functions", () => {
     expect(items.length).toEqual(4);
   });
 
-  test("remove", () => {
+  it("remove", () => {
     let items: number[] = [1, 2, 3, 4, 5];
     items.remove(3);
 
     expect(items).toEqual([1, 2, 4, 5]);
   });
 
-  test("remove Object", () => {
+  it("remove Object", () => {
     let items: { name: string }[] = [{ name: "ali" }, { name: "veli" }];
     let item = items[0];
     items.remove(item);
@@ -32,7 +33,7 @@ describe("extended array functions", () => {
     expect(items).toEqual([{ name: "veli" }]);
   });
 
-  test("find remove", () => {
+  it("find remove", () => {
     let items: { id: number }[] = [{ id: 12 }, { id: 23 }];
 
     items.findRemove((e) => e.id == 12);
@@ -40,7 +41,7 @@ describe("extended array functions", () => {
     expect(items).toEqual([{ id: 23 }]);
   });
 
-  test("pushIf", () => {
+  it("pushIf", () => {
     let items: number[] = [1, 3, 4, 5, 6];
 
     items.pushIf(24, (e) => 24 > 10);
@@ -49,7 +50,7 @@ describe("extended array functions", () => {
     expect(items).toEqual([1, 3, 4, 5, 6, 24]);
   });
 
-  test("pushRange", () => {
+  it("pushRange", () => {
     let items: number[] = [1, 2];
 
     items.pushRange([3, 4]);
@@ -57,7 +58,7 @@ describe("extended array functions", () => {
     expect(items).toEqual([1, 2, 3, 4]);
   });
 
-  test("forEachAsync", async () => {
+  it("forEachAsync", async () => {
     let items: number[] = [1, 2];
 
     let otherItems: number[] = [6, 7];
@@ -78,7 +79,7 @@ describe("extended array functions", () => {
     expect(items).toEqual([1, 2, 6, 7]);
   });
 
-  test("toGroupModel", () => {
+  it("toGroupModel", () => {
     let items: { value: string; id: number }[] = [
       { value: "first", id: 1 },
       { value: "second", id: 2 },
@@ -98,7 +99,7 @@ describe("extended array functions", () => {
     expect(JSON.stringify(group)).toEqual(JSON.stringify(expectGroup));
   });
 
-  test("toGroupItems", () => {
+  it("toGroupItems", () => {
     let items: { value: string; id: number }[] = [
       { value: "first", id: 1 },
       { value: "second", id: 2 },
@@ -129,7 +130,7 @@ describe("extended array functions", () => {
     expect(JSON.stringify(groupItems)).toEqual(JSON.stringify(expectGroupItems));
   });
 
-  test("toGroupModelValues", () => {
+  it("toGroupModelValues", () => {
     let items: { value: string; id: number }[] = [
       { value: "first", id: 1 },
       { value: "second", id: 2 },
@@ -150,7 +151,7 @@ describe("extended array functions", () => {
     expect(JSON.stringify(groupValues)).toEqual(JSON.stringify(expectGroupValues));
   });
 
-  test("sum", () => {
+  it("sum", () => {
     let items: { value: number }[] = [{ value: 1 }, { value: 2 }, { value: 3 }];
 
     let sum = items.sum((e) => e.value);
@@ -158,21 +159,21 @@ describe("extended array functions", () => {
     expect(sum).toEqual(6);
   });
 
-  test("distinc", () => {
+  it("distinc", () => {
     let items: string[] = ["ali", "veli", "ayşe", "veli", "ali"];
     items = items.distinct();
 
     expect(items.length).toEqual(3);
   });
 
-  test("distinc with field", () => {
+  it("distinc with field", () => {
     let items = [{ name: "ali" }, { name: "ali" }, { name: "veli" }];
     items = items.distinct((e) => e.name);
 
     expect(items).toEqual([{ name: "ali" }, { name: "veli" }]);
   });
 
-  test("mapIf", () => {
+  it("mapIf", () => {
     const items = [1, 2, 3, 4, 5, 6];
     const result = items.mapIf(
       (e) => e,
@@ -181,7 +182,7 @@ describe("extended array functions", () => {
     expect(result).toEqual([1, 3, 5]);
   });
 
-  test("filterByCollection", () => {
+  it("filterByCollection", () => {
     const items = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
     const result = items.filterByCollection((e) => e.id, [1, 3]);
@@ -189,7 +190,7 @@ describe("extended array functions", () => {
     expect(result).toEqual([{ id: 1 }, { id: 3 }]);
   });
 
-  test("filterByExcludesCollection", () => {
+  it("filterByExcludesCollection", () => {
     const items = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
     const result = items.filterByExcludesCollection((e) => e.id, [1, 3]);
@@ -197,7 +198,7 @@ describe("extended array functions", () => {
     expect(result).toEqual([{ id: 2 }]);
   });
 
-  test("findByCollection", () => {
+  it("findByCollection", () => {
     const items = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
     const result = items.findByCollection((e) => e.id, [1, 3]);
