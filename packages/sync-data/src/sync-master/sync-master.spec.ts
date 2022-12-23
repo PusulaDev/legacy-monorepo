@@ -2,6 +2,7 @@ import { SyncMaster } from "./sync-master";
 import { Syncable } from "../syncable/syncable";
 import { EnumEffect } from "./effect.enum";
 import { effectsSync, effects } from "../decorators/effects.decorator";
+import { describe, it, expect } from "vitest"
 
 describe("Sync Master", () => {
   class Test1 extends Syncable<number> {
@@ -72,7 +73,7 @@ describe("Sync Master", () => {
     }
   }
 
-  test("should add new items to test1", () => {
+  it("should add new items to test1", () => {
     let instance1 = new Test1();
     let instance2 = new Test1();
 
@@ -82,7 +83,7 @@ describe("Sync Master", () => {
     expect(instance2.items).toEqual([1, 2, 250]);
   });
 
-  test("syncConditions should work", () => {
+  it("syncConditions should work", () => {
     let instance1 = new Test1();
     let instance2 = new Test2();
 
@@ -93,7 +94,7 @@ describe("Sync Master", () => {
     expect(instance2.items).toEqual([1, 2, 3, 5]);
   });
 
-  test("remove should work", () => {
+  it("remove should work", () => {
     let instance1 = new Test1();
 
     SyncMaster.effect("test", { effect: EnumEffect.Removed, data: 1 });
@@ -101,7 +102,7 @@ describe("Sync Master", () => {
     expect(instance1.items).toEqual([2]);
   });
 
-  test("shide effects should work", () => {
+  it("shide effects should work", () => {
     let instance1 = new Test1();
     let instance2 = new Test2();
 
@@ -114,7 +115,7 @@ describe("Sync Master", () => {
     expect(instance2.items).toEqual([1, 2, 3, 5, 6, 7]);
   });
 
-  test("shide effects should work when there isnt any registered main syncable", () => {
+  it("shide effects should work when there isnt any registered main syncable", () => {
     SyncMaster.clear();
 
     let instance2 = new Test2();
@@ -128,7 +129,7 @@ describe("Sync Master", () => {
     expect(instance2.items).toEqual([1, 2, 3, 5, 6, 7]);
   });
 
-  test("unregister should work", () => {
+  it("unregister should work", () => {
     let instance1 = new Test1();
 
     SyncMaster.unregister("test", instance1);
@@ -136,7 +137,7 @@ describe("Sync Master", () => {
     expect(instance1.items).toEqual([1, 2]);
   });
 
-  test("decorator should work for sync and async methods", async () => {
+  it("decorator should work for sync and async methods", async () => {
     let instance1 = new Test1();
     let res1 = await EffectTestClass.runAddedEffect(351);
     let res2 = EffectTestClass.runAddedEffectSync(352);
@@ -146,7 +147,7 @@ describe("Sync Master", () => {
     expect(res2).toEqual(352);
   });
 
-  test("should check for condition", () => {
+  it("should check for condition", () => {
     let instance1 = new Test1();
     let res2 = EffectTestClass.runAddWithCondition(13);
 
