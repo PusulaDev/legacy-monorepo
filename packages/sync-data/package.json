@@ -1,0 +1,49 @@
+{
+  "name": "@pusula/sync-data",
+  "version": "1.1.2",
+  "description": "Sync data between classes, functions",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "serve": "vite"
+  },
+  "keywords": [
+    "typescript",
+    "sync",
+    "data",
+    "sync-data"
+  ],
+  "author": "Pusula",
+  "license": "ISC",
+  "dependencies": {
+    "lodash.clonedeep": "4.5.0"
+  },
+  "peerDependencies": {
+    "lodash.clonedeep": "^4.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.2",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/jest": "^24.0.24",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.2.0",
+    "tslib": "^2.4.0",
+    "@rollup/plugin-typescript": "^9.0.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "vitest": "^0.24.5",
+    "vite": "^3.1.8"
+  }
+}

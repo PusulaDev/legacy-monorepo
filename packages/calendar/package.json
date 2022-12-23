@@ -1,0 +1,61 @@
+{
+  "name": "@pusula/calendar",
+  "version": "1.0.9",
+  "author": "Pusula",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "test:unit": "vue-cli-service test:unit",
+    "build-lib": "vue-cli-service build --target lib --name calendar ./src/components/index.ts",
+    "build-modern": "vue-cli-service build --modern",
+    "build": "vue-cli-service build --modern --target lib --name calendar ./src/components/index.ts",
+    "build-modern-wc": "vue-cli-service build --modern --target wc --name calendar ./src/components/*.vue",
+    "build-modern-wc-async": "vue-cli-service build --modern --target wc-async --name calendar ./src/components/*.vue",
+    "build-wc": "vue-cli-service build --target wc --name calendar ./src/components/*.vue",
+    "build-wc-async": "vue-cli-service build --target wc-async --name calendar ./src/components/*.vue",
+    "npm-publish": "npm publish --access public"
+  },
+  "main": "./dist/calendar.common.js",
+  "unpkg": "./dist/calendar.umd.min.js",
+  "files": [
+    "dist/*",
+    "src/*",
+    "*.json",
+    "*.js",
+    "types/*"
+  ],
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "lodash.clonedeep": "4.5.0",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^8.4.2"
+  },
+  "devDependencies": {
+    "tslib": "2.4.1",
+    "@types/jest": "^24.0.19",
+    "@types/lodash.clonedeep": "4.5.3",
+    "@vue/cli-plugin-babel": "~4.5.13",
+    "@vue/cli-plugin-typescript": "~4.5.13",
+    "@vue/cli-plugin-unit-jest": "~4.5.13",
+    "@vue/cli-service": "~4.5.13",
+    "@vue/test-utils": "^1.1.1",
+    "node-sass": "^8.0.0",
+    "prettier": "2.1.2",
+    "sass-loader": "^10.2.0",
+    "typescript": "4.9.3",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "jest": {
+    "preset": "@vue/cli-plugin-unit-jest/presets/typescript"
+  },
+  "_moduleAliases": {
+    "@": "dist"
+  },
+  "license": "MIT",
+  "types": "types/components/index.d.ts"
+}

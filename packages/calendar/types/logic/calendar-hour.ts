@@ -1,0 +1,1 @@
+export type CalendarHour = { value: number; text: string }

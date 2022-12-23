@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "ES2015",
+      "module": "ESNext",
+      "lib": ["esnext","es2017", "es7", "es6", "dom"],
+      "declaration": true,
+      "outDir": "dist",
+      "strict": true,
+      "esModuleInterop": true,
+      "experimentalDecorators": true
+    },
+    "include": ["src", "test.ts", "src/index.tsx.ts"],
+    "exclude": [
+      "node_modules",
+      "**/*.spec.ts",
+      "./test.ts",
+      "./index.html"
+    ]
+  }

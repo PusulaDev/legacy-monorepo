@@ -1,0 +1,9 @@
+$border-color: #dddddd;
+$border-color-soft: #ededed;
+
+@mixin clickable {
+  cursor: pointer;
+  &:hover {
+    opacity: 0.9;
+  }
+}
