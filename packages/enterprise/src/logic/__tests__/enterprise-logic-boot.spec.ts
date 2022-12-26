@@ -1,6 +1,7 @@
 import { EnterpriseLogic, enterpriseLogicBoot } from "..";
 import { EnterpriseApi } from "../../api";
 import { logic } from "../dependency-injection/logic.decorator";
+import { describe, it, expect } from "vitest";
 
 describe("Enterprise Logic Boot", () => {
     it("should initialize logic", () => {

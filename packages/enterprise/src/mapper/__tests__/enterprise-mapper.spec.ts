@@ -1,5 +1,6 @@
 import { createMock, IMockData } from "../mocks/mock";
 import { EnterpriseMapper } from "../enterprise-mapper";
+import { describe, it, expect } from "vitest";
 
 describe("Enterprise Mapper", () => {
     it("should map all fields", () => {

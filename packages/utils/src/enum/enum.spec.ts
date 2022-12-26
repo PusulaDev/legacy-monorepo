@@ -1,5 +1,6 @@
 import { EnumUtil } from "./enum.util";
 import { IValueTextPair } from "./value-text-pair.interface";
+import { describe, it, expect } from "vitest"
 
 enum EnumTest {
   One = 1,
@@ -21,7 +22,7 @@ enum EnumFlaggedTest {
 }
 
 describe("EnumUtil", () => {
-  test("converts all items to value text pair", () => {
+  it("converts all items to value text pair", () => {
     let items = EnumUtil.toValueTextPair(EnumTest);
 
     let expectedItems: IValueTextPair[] = [
@@ -33,13 +34,13 @@ describe("EnumUtil", () => {
     expect(items).toEqual(expectedItems);
   });
 
-  test("cannot convert non number enum", () => {
+  it("cannot convert non number enum", () => {
     let items = EnumUtil.toValueTextPair(EnumNoNumberTest);
 
     expect(items).toEqual([]);
   });
 
-  test("statement function works", () => {
+  it("statement function works", () => {
     let items = EnumUtil.toValueTextPair(EnumTest, (e) => e < 3);
 
     let expectedItems: IValueTextPair[] = [
@@ -50,7 +51,7 @@ describe("EnumUtil", () => {
     expect(items).toEqual(expectedItems);
   });
 
-  test("find flagged enum values", () => {
+  it("find flagged enum values", () => {
     let items = EnumUtil.flaggedEnumToValueTextPair(EnumFlaggedTest, 6);
 
     let expectedItems: IValueTextPair[] = [

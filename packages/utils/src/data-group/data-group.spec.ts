@@ -1,8 +1,9 @@
 import { GroupModel, GroupItem } from "./data-group.interface";
 import { dataGroupUtil, DataGroupUtil } from "./data-group.util";
+import { describe, it, expect } from "vitest"
 
 describe("DataGroupUtil", () => {
-  test("toGroupModel", () => {
+  it("toGroupModel", () => {
     let items: { value: string; id: number }[] = [
       { value: "first", id: 1 },
       { value: "second", id: 2 },
@@ -22,7 +23,7 @@ describe("DataGroupUtil", () => {
     expect(JSON.stringify(group)).toEqual(JSON.stringify(expectGroup));
   });
 
-  test("toGroupItems", () => {
+  it("toGroupItems", () => {
     let items: { value: string; id: number }[] = [
       { value: "first", id: 1 },
       { value: "second", id: 2 },

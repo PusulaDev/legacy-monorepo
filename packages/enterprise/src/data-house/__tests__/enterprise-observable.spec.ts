@@ -1,5 +1,6 @@
 import { EnterpriseObservable } from "../observable/enterprise-observable";
 import { IEnterpriseSubscription } from "../observable";
+import { describe, it, expect, beforeEach } from "vitest";
 
 describe("EnterpriseObservable", () => {
     let observable: EnterpriseObservable<string>;
@@ -20,7 +21,7 @@ describe("EnterpriseObservable", () => {
             removedValue = item + "";
         };
 
-        observable.subscribe({ id: "1", added, removed, sideEffected: () => {} });
+        observable.subscribe({ id: "1", added, removed, sideEffected: () => { } });
         observable.added("12");
         observable.removed("23");
 
@@ -32,8 +33,8 @@ describe("EnterpriseObservable", () => {
         let isSideEffected: boolean = false;
         const sub1: IEnterpriseSubscription<string> = {
             id: "sub1",
-            added: (item: string) => {},
-            removed: (id: string | number) => {},
+            added: (item: string) => { },
+            removed: (id: string | number) => { },
             sideEffected: () => {
                 isSideEffected = true;
             },
@@ -53,15 +54,15 @@ describe("EnterpriseObservable", () => {
         const sub1: IEnterpriseSubscription<string> = {
             id: "sub1",
             added: (item: string) => items1.push(item),
-            removed: (id: string | number) => {},
-            sideEffected: () => {},
+            removed: (id: string | number) => { },
+            sideEffected: () => { },
         };
 
         const sub2: IEnterpriseSubscription<string> = {
             id: "sub2",
             added: (item: string) => items2.push(item),
-            removed: (id: string | number) => {},
-            sideEffected: () => {},
+            removed: (id: string | number) => { },
+            sideEffected: () => { },
         };
 
         observable.subscribe(sub1);
@@ -85,7 +86,7 @@ describe("EnterpriseObservable", () => {
             removedValues.push(item + "");
         };
 
-        observable.subscribe({ id: "1", added, removed, sideEffected: () => {} });
+        observable.subscribe({ id: "1", added, removed, sideEffected: () => { } });
         observable.addedMany(["1", "2", "3"]);
         observable.removedMany(["4", "5", "6"]);
 
@@ -112,7 +113,7 @@ describe("EnterpriseObservable", () => {
             added,
             removed,
             filterFunc,
-            sideEffected: () => {},
+            sideEffected: () => { },
         });
         observable.added("33");
         observable.removed("44");
@@ -133,7 +134,7 @@ describe("EnterpriseObservable", () => {
             removedValue = item + "";
         };
 
-        observable.subscribe({ id: "3", added, removed, sideEffected: () => {} });
+        observable.subscribe({ id: "3", added, removed, sideEffected: () => { } });
         observable.unsubscribe("3");
         observable.added("12");
         observable.removed("23");

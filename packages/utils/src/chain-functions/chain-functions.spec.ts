@@ -1,4 +1,5 @@
 import { ChainFunctions } from "./chain-functions";
+import { describe, it, expect } from "vitest"
 
 describe("Chain Functions", () => {
   it("should run two function consecutive", () => {

@@ -1,4 +1,5 @@
 import { EnterpriseApiHelper } from '../enterprise-api.helper';
+import { describe, it, expect } from "vitest";
 
 
 describe("Enterprise Api Helper ", () => {
@@ -69,7 +70,7 @@ describe("Enterprise Api Helper ", () => {
         expect(key).toBe('2_https://test.com_{"id":1}')
     })
 
-    it("should create cancel token",()=>{
+    it("should create cancel token", () => {
         const token = EnterpriseApiHelper.createCancelToken();
 
         expect(token.cancel).toBeDefined()

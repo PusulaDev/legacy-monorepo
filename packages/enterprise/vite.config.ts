@@ -19,7 +19,7 @@ export default defineConfig({
         dts({
             insertTypesEntry: true,
             skipDiagnostics: false,
-            exclude: ["src/**/__tests__/*.ts","src/**/*.spec.ts"],
+            exclude: ["src/**/__tests__/*.ts", "src/**/*.spec.ts", "src/**/mocks/**"],
         }),
     ],
 });
