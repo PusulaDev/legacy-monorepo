@@ -1,46 +1,48 @@
 import { EnterpriseDataProvider } from "../enterprise-data-provider";
-import { EnterpriseApi } from "../../api";
-import mockAxios from "jest-mock-axios";
+import { EnterpriseApi, HTTP_SUCCESS_CODES } from "../../api";
 import { IApiRequestOptions } from "..";
 import { IMockData } from "../../data-house/mocks/mock";
+import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
+import Axios, { AxiosInstance } from "axios"
+import { createAxiosMock } from "../../../__mocks__";
 
-const enterpriseApi = new EnterpriseApi({
-    baseUrl: "http://test.com",
-});
+
 
 describe("Enterprise Data Provider", () => {
     let provider: EnterpriseDataProvider;
+    let axiosCreate: AxiosInstance;
 
     beforeEach(() => {
+        vi.clearAllMocks();
+
+        axiosCreate = createAxiosMock();
+        const enterpriseApi = new EnterpriseApi({
+            baseUrl: "http://test.com",
+        });
         provider = new EnterpriseDataProvider(enterpriseApi);
     });
 
-    afterEach(() => {
-        mockAxios.reset();
-    });
-
-    it("should validate request en return errorMessage", () => {
-        //Validation algorithm is not implemented yet
-    });
 
     it("should return data", async () => {
-        const request = provider.apiRequest({
+        const expectedResponse = { data: { id: 1, name: "ali" }, status: HTTP_SUCCESS_CODES[0] };
+
+        (axiosCreate.post as Mock).mockResolvedValue(expectedResponse)
+
+        const response = await provider.apiRequest({
             options: { url: "patient" },
             request: { id: 1 },
         });
 
-        expect(mockAxios.post).toHaveBeenCalledWith("patient", { id: 1 }, undefined);
-
-        const expectedResponse = { data: { id: 1, name: "ali" } };
-
-        mockAxios.mockResponse(expectedResponse);
-
-        const response = await request;
-
+        expect(axiosCreate.post).toHaveBeenCalledWith("patient", { id: 1 }, undefined);
         expect(response.data).toEqual(expectedResponse.data);
     });
 
     it("should call post with cancelToken", async () => {
+
+        (axiosCreate.post as Mock).mockImplementationOnce(() => { throw new Error() })
+            .mockImplementationOnce(() => ({ data: 1, status: HTTP_SUCCESS_CODES[0] }))
+        vi.spyOn(Axios, "isCancel").mockImplementation(() => true)
+
         const request = provider.apiRequest({
             options: { url: "patient" },
             request: { id: 1 },
@@ -54,16 +56,20 @@ describe("Enterprise Data Provider", () => {
         });
 
         const result1 = await request;
-
-        mockAxios.mockResponse({ data: 1 });
-
         const result2 = await request2;
+
 
         expect(result1.canceled).toBeTruthy();
         expect(result2.canceled).toBeFalsy();
     });
 
-    it("should not cancel the same second request",async () => {
+    it("should not cancel the same second request", async () => {
+
+        (axiosCreate.post as Mock).mockImplementationOnce(() => { throw new Error() })
+            .mockImplementationOnce(() => ({ data: 1, status: HTTP_SUCCESS_CODES[0] }))
+
+        vi.spyOn(Axios, "isCancel").mockImplementation(() => true)
+
         const request = provider.apiRequest({
             options: { url: "patient" },
             request: { id: 23 },
@@ -77,9 +83,6 @@ describe("Enterprise Data Provider", () => {
         });
 
         const result1 = await request;
-
-        mockAxios.mockResponse({ data: 1 });
-
         const result2 = await request2;
 
         expect(result1.canceled).toBeTruthy();
@@ -87,6 +90,8 @@ describe("Enterprise Data Provider", () => {
     })
 
     it("should prevent multiple same request", () => {
+        (axiosCreate.post as Mock).mockResolvedValue({ data: 1 })
+
         provider.apiRequest({
             options: { url: "patient" },
             request: { id: 1 },
@@ -100,7 +105,7 @@ describe("Enterprise Data Provider", () => {
             request: { id: 1 },
         });
 
-        expect(mockAxios.post).toHaveBeenCalledTimes(1);
+        expect(axiosCreate.post).toHaveBeenCalledTimes(1);
     });
 
     it("should create errorMessages when error and createErrorMessagesFunc defined", async () => {
@@ -113,19 +118,20 @@ describe("Enterprise Data Provider", () => {
 
         provider = new EnterpriseDataProvider(api);
 
+        const errorMessage = {
+            error: "Error message",
+        };
+
+        vi.spyOn(axiosCreate, 'post').mockResolvedValueOnce({
+            data: errorMessage,
+            status: 500,
+        })
+
         const request = provider.apiRequest({
             options: { url: "test" },
             request: {},
         });
 
-        const errorMessage = {
-            error: "Error message",
-        };
-
-        mockAxios.mockResponse({
-            data: errorMessage,
-            status: 500,
-        });
 
         const result = await request;
 
@@ -152,17 +158,17 @@ describe("Enterprise Data Provider", () => {
             },
         };
 
-        const request = provider.apiRequest<{}, IMockData>({
-            options: requestOptions,
-            request: {},
-        });
-
         const mockData: IMockData = {
             name: "test",
             id: 0,
         };
 
-        mockAxios.mockResponse({ data: mockData });
+        vi.spyOn(axiosCreate, 'post').mockResolvedValueOnce({ data: mockData })
+
+        const request = provider.apiRequest<{}, IMockData>({
+            options: requestOptions,
+            request: {},
+        });
 
         const response = await request;
 

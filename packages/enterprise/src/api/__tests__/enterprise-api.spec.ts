@@ -1,12 +1,16 @@
 import { EnterpriseApi } from "../enterpise-api";
-import mockAxios from "jest-mock-axios";
+import { describe, it, expect, afterEach, vi, beforeEach } from "vitest";
+import Axios from "axios";
+import { createAxiosMock, mockAxiosCreate } from "../../../__mocks__";
 
 describe("Enterprise Api", () => {
-    afterEach(() => {
-        mockAxios.reset();
-    });
+    beforeEach(() => {
+        vi.clearAllMocks();
+    })
 
     it("should set headers", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         const api = new EnterpriseApi({
             baseUrl: "test.com",
             headers: {
@@ -14,7 +18,7 @@ describe("Enterprise Api", () => {
             },
         });
 
-        expect(mockAxios.create).toHaveBeenCalledWith({
+        expect(Axios.create).toHaveBeenCalledWith({
             baseURL: "test.com/",
             headers: {
                 "content-type": "application/json",
@@ -29,6 +33,8 @@ describe("Enterprise Api", () => {
     });
 
     it("should initialize axios again with options", () => {
+        vi.spyOn(Axios, 'create').mockImplementation(() => mockAxiosCreate());
+
         const api = new EnterpriseApi({
             baseUrl: "test.com",
         });
@@ -42,7 +48,7 @@ describe("Enterprise Api", () => {
 
         api.setOptions(options);
 
-        expect(mockAxios.create).toHaveBeenCalledWith({
+        expect(Axios.create).toHaveBeenCalledWith({
             baseURL: "second.com/",
             headers: {
                 "x-auth-token": "test",
@@ -53,6 +59,8 @@ describe("Enterprise Api", () => {
     });
 
     it("should create axios ", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         const api = new EnterpriseApi({
             baseUrl: "http://test.com",
         });
@@ -62,28 +70,34 @@ describe("Enterprise Api", () => {
     });
 
     it("should ensure last character to be slash", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         const api = new EnterpriseApi({
             baseUrl: "http://test.com",
         });
 
         api.getAxios();
 
-        expect(mockAxios.create).toHaveBeenCalledWith({
+        expect(Axios.create).toHaveBeenCalledWith({
             baseURL: "http://test.com/",
         });
     });
 
     it("should create axios with hostName ", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         new EnterpriseApi({
             hostName: "wololo.com",
         });
 
-        expect(mockAxios.create).toHaveBeenCalledWith({
+        expect(Axios.create).toHaveBeenCalledWith({
             baseURL: "//wololo.com/",
         });
     });
 
     it("should create base url from options", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         const api = new EnterpriseApi({
             protocol: "https",
             hostName: "myWebsite.com",
@@ -93,24 +107,28 @@ describe("Enterprise Api", () => {
 
         api.getAxios();
 
-        expect(mockAxios.create).toHaveBeenCalledWith({
+        expect(Axios.create).toHaveBeenCalledWith({
             baseURL: "https://myWebsite.com/tr-tr/json/",
         });
     });
 
     it("should create base url withouth protocol and language prefix", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         const api = new EnterpriseApi({
             hostName: "myWebsite.com",
         });
 
         api.getAxios();
 
-        expect(mockAxios.create).toHaveBeenCalledWith({
+        expect(Axios.create).toHaveBeenCalledWith({
             baseURL: "//myWebsite.com/",
         });
     });
 
     it("it should create base url from endPoints", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         global.window = Object.create(window);
         const url = "localhost:1234";
 
@@ -128,7 +146,7 @@ describe("Enterprise Api", () => {
 
         api.getAxios();
 
-        expect(mockAxios.create).toHaveBeenCalledWith({
+        expect(Axios.create).toHaveBeenCalledWith({
             baseURL: "//test.com/",
         });
     });
@@ -136,7 +154,7 @@ describe("Enterprise Api", () => {
     it("should throw error if hostName and baseUrls is empty", () => {
         try {
             new EnterpriseApi({});
-        } catch (e:any) {
+        } catch (e: any) {
             expect(e.message).toBe(
                 "hostName , endPoints or baseUrl is required"
             );
@@ -144,6 +162,8 @@ describe("Enterprise Api", () => {
     });
 
     it("should set authToken", () => {
+        vi.spyOn(Axios, 'create').mockImplementationOnce(() => mockAxiosCreate());
+
         const api = new EnterpriseApi({
             baseUrl: "test.com",
             authTokenHeaderKey: "x-auth-token",
@@ -169,6 +189,8 @@ describe("Enterprise Api", () => {
     });
 
     it("should call get and delete with query params", () => {
+        const axiosCreate = createAxiosMock();
+
         const api = new EnterpriseApi({
             baseUrl: "test.com",
         });
@@ -176,14 +198,16 @@ describe("Enterprise Api", () => {
         api.get("getData", { id: 1 });
         api.delete("getData", { id: 1 });
 
-        expect(mockAxios.get).toHaveBeenCalledWith("getData?id=1", undefined);
-        expect(mockAxios.delete).toHaveBeenCalledWith(
+        expect(axiosCreate.get).toHaveBeenCalledWith("getData?id=1", undefined);
+        expect(axiosCreate.delete).toHaveBeenCalledWith(
             "getData?id=1",
             undefined
         );
     });
 
     it("should call post and put with data", () => {
+        const axiosCreate = createAxiosMock();
+
         const api = new EnterpriseApi({
             baseUrl: "test.com",
         });
@@ -191,12 +215,12 @@ describe("Enterprise Api", () => {
         api.post("getData", { id: 1 });
         api.put("getData", { id: 1 });
 
-        expect(mockAxios.post).toHaveBeenCalledWith(
+        expect(axiosCreate.post).toHaveBeenCalledWith(
             "getData",
             { id: 1 },
             undefined
         );
-        expect(mockAxios.put).toHaveBeenCalledWith(
+        expect(axiosCreate.put).toHaveBeenCalledWith(
             "getData",
             { id: 1 },
             undefined
@@ -204,6 +228,8 @@ describe("Enterprise Api", () => {
     });
 
     it("should send file data", () => {
+        const axiosCreate = createAxiosMock();
+
         const api = new EnterpriseApi({
             baseUrl: "upload.com",
         });
@@ -221,6 +247,6 @@ describe("Enterprise Api", () => {
 
         formData.append("json", JSON.stringify(data));
 
-        expect(mockAxios.post).toHaveBeenCalledWith("up", formData, undefined);
+        expect(axiosCreate.post).toHaveBeenCalledWith("up", formData, undefined);
     });
 });

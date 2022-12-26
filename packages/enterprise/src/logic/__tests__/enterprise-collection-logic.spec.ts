@@ -2,6 +2,7 @@ import { createMock } from "../../data-house/mocks/mock";
 import { MockLogic, IMockVmData } from "../mocks/enterprise-logic.mock";
 import { MockEnterpriseApi } from "../../api/mocks/mock";
 import { enterpriseLogicBoot } from "../dependency-injection/enterprise-logic.boot";
+import { describe, it, expect } from "vitest";
 
 describe("Enterprise Collection Logic", () => {
     const api = new MockEnterpriseApi();

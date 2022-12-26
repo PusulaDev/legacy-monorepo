@@ -1,5 +1,4 @@
-import mockAxios from "jest-mock-axios";
-import { EnterpriseApi, ServiceRequest } from "../../api";
+import { EnterpriseApi, HTTP_SUCCESS_CODES, ServiceRequest } from "../../api";
 import { EnterpriseCollectionProvider } from "../collection/enterprise-collection-provider";
 import { IMockData } from "../../data-house/mocks/mock";
 import { EnumCacheType } from "@pusula/utils";
@@ -10,15 +9,25 @@ import {
     EnterpriseObservable,
 } from "../../data-house/observable";
 
-const enterpriseApi = new EnterpriseApi({
-    baseUrl: "http://test.com",
-});
+import { describe, it, expect, afterEach, vi, beforeEach, Mock } from "vitest";
+import Axios, { AxiosInstance } from "axios"
+import { createAxiosMock } from "../../../__mocks__";
+
 
 describe("EnterpriseCollectionProvider", () => {
-    afterEach(() => {
-        mockAxios.reset();
+    let enterpriseApi: EnterpriseApi;
+    let axiosCreate: AxiosInstance;
+
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+
+        axiosCreate = createAxiosMock();
+        enterpriseApi = new EnterpriseApi({
+            baseUrl: "http://test.com",
+        });
         EnterpriseDataHouse.instance.clear(EnumCacheType.Memory, "test");
-    });
+    })
 
     it("should call get", () => {
         const provider = new EnterpriseCollectionProvider<IMockData, {}>(
@@ -26,9 +35,11 @@ describe("EnterpriseCollectionProvider", () => {
             { typename: "test", getRequestOptions: { url: "test" } }
         );
 
+        vi.spyOn(axiosCreate, 'post')
+
         provider.get({});
 
-        expect(mockAxios.post).toHaveBeenCalledWith("test", {}, undefined);
+        expect(axiosCreate.post).toHaveBeenCalledWith("test", {}, undefined);
     });
 
     it("should call save", () => {
@@ -39,9 +50,11 @@ describe("EnterpriseCollectionProvider", () => {
 
         const request = { test: { id: 1 } };
 
+        vi.spyOn(axiosCreate, 'post')
+
         provider.save(request);
 
-        expect(mockAxios.post).toHaveBeenCalledWith(
+        expect(axiosCreate.post).toHaveBeenCalledWith(
             "saveTest",
             request,
             undefined
@@ -52,16 +65,18 @@ describe("EnterpriseCollectionProvider", () => {
         const provider = new EnterpriseCollectionProvider<
             IMockData,
             any,
-            ServiceRequest<any,any>,
-            ServiceRequest<any,any>
+            ServiceRequest<any, any>,
+            ServiceRequest<any, any>
         >(enterpriseApi, {
             typename: "test",
             deleteRequestOptions: { url: "deleteTest" },
         });
 
+        vi.spyOn(axiosCreate, 'post')
+
         provider.delete({ id: 1 });
 
-        expect(mockAxios.post).toHaveBeenCalledWith(
+        expect(axiosCreate.post).toHaveBeenCalledWith(
             "deleteTest",
             { id: 1 },
             undefined
@@ -80,9 +95,11 @@ describe("EnterpriseCollectionProvider", () => {
             getRequestOptions: { url: "getTests" },
         });
 
+        vi.spyOn(axiosCreate, 'post')
+
         provider.get({});
 
-        expect(mockAxios.post).toHaveBeenCalledWith("getTests", {}, undefined);
+        expect(axiosCreate.post).toHaveBeenCalledWith("getTests", {}, undefined);
     });
 
     it("should get data from cache and should'nt call get request", () => {
@@ -97,11 +114,13 @@ describe("EnterpriseCollectionProvider", () => {
             getRequestOptions: { url: "getTests" },
         });
 
+        vi.spyOn(axiosCreate, 'post')
+
         provider.setCache([{ name: "test", id: 1 }]);
 
         provider.get({});
 
-        expect(mockAxios.post).toHaveBeenCalledTimes(0);
+        expect(axiosCreate.post).toHaveBeenCalledTimes(0);
     });
 
     it("should not get data from cache and calls get when forceGetFromApi is true", () => {
@@ -116,11 +135,13 @@ describe("EnterpriseCollectionProvider", () => {
             getRequestOptions: { url: "getTests" },
         });
 
+        vi.spyOn(axiosCreate, 'post')
+
         provider.setCache([{ id: 1, name: "test" }]);
 
         provider.get({}, { forceGetFromApi: true });
 
-        expect(mockAxios.post).toHaveBeenCalledWith("getTests", {}, undefined);
+        expect(axiosCreate.post).toHaveBeenCalledWith("getTests", {}, undefined);
     });
 
     it("should call get when items from cache is lacking", () => {
@@ -137,11 +158,13 @@ describe("EnterpriseCollectionProvider", () => {
             idField: "id",
         });
 
+        vi.spyOn(axiosCreate, 'post')
+
         provider.setCache([{ id: 1, name: "test" }]);
 
         provider.get({}, { ids: [2] });
 
-        expect(mockAxios.post).toHaveBeenCalledWith("getTests", {}, undefined);
+        expect(axiosCreate.post).toHaveBeenCalledWith("getTests", {}, undefined);
     });
 
     it("should set data to cache on save", async () => {
@@ -159,13 +182,13 @@ describe("EnterpriseCollectionProvider", () => {
         });
 
         const data: IMockData = { id: 1, name: "new item" };
+        (axiosCreate.post as Mock).mockResolvedValueOnce({ data: { id: 15 }, status: HTTP_SUCCESS_CODES[0] })
 
-        const request = provider.save({ item: data }, (response:IMockData) => {
+        const request = provider.save({ item: data }, (response: IMockData) => {
             const newData = { id: response.id, name: data.name };
             return [newData];
         });
 
-        mockAxios.mockResponse({ data: { id: 15 } });
 
         await request;
 
@@ -178,8 +201,8 @@ describe("EnterpriseCollectionProvider", () => {
         const provider = new EnterpriseCollectionProvider<
             IMockData,
             any,
-            ServiceRequest<any,any>,
-            ServiceRequest<any,any>
+            ServiceRequest<any, any>,
+            ServiceRequest<any, any>
         >(enterpriseApi, {
             typename: "test",
             cacheStrategy: EnumCacheType.Memory,
@@ -190,9 +213,8 @@ describe("EnterpriseCollectionProvider", () => {
 
         provider.setCache([{ id: 1, name: "test" }]);
 
+        (axiosCreate.post as Mock).mockResolvedValueOnce({ data: { id: 1 }, status: HTTP_SUCCESS_CODES[0] })
         const request = provider.delete({ id: 1 }, [1]);
-        mockAxios.mockResponse({ data: { id: 1 } });
-
         await request;
 
         const data = provider.getFromCache();
@@ -203,8 +225,8 @@ describe("EnterpriseCollectionProvider", () => {
         const provider = new EnterpriseCollectionProvider<
             IMockData,
             any,
-            ServiceRequest<{},IMockData[]>,
-            ServiceRequest<{},number>
+            ServiceRequest<{}, IMockData[]>,
+            ServiceRequest<{}, number>
         >(enterpriseApi, {
             typename: "test",
             saveRequestOptions: { url: "saveTests" },
@@ -226,33 +248,29 @@ describe("EnterpriseCollectionProvider", () => {
             removed: (id) => {
                 removedId = +id;
             },
-            sideEffected: () => {},
+            sideEffected: () => { },
         };
 
         provider.subscribe(subscription);
-
-        const saveRequest = provider.save({}, (res: IMockData[]) => {
-            return res;
-        });
 
         const savedData: IMockData[] = [
             { id: 1, name: "ali" },
             { id: 2, name: "fatma" },
         ];
 
-        mockAxios.mockResponse({
-            data: savedData,
+        (axiosCreate.post as Mock).mockResolvedValueOnce({ data: savedData, status: HTTP_SUCCESS_CODES[0] })
+
+        const saveRequest = provider.save({}, (res: IMockData[]) => {
+            return res;
         });
 
         await saveRequest;
 
         expect(addedItem).toEqual(savedData[1]);
 
-        const deleteRequet = provider.delete({}, [12]);
+        (axiosCreate.post as Mock).mockResolvedValueOnce({ data: 12, status: HTTP_SUCCESS_CODES[0] })
 
-        mockAxios.mockResponse({
-            data: 12,
-        });
+        const deleteRequet = provider.delete({}, [12]);
 
         await deleteRequet;
 
@@ -263,8 +281,8 @@ describe("EnterpriseCollectionProvider", () => {
         const provider = new EnterpriseCollectionProvider<
             IMockData,
             any,
-            ServiceRequest<{},IMockData[]>,
-            ServiceRequest<any,any>
+            ServiceRequest<{}, IMockData[]>,
+            ServiceRequest<any, any>
         >(enterpriseApi, {
             typename: "test",
             saveRequestOptions: { url: "saveTests" },
@@ -275,8 +293,8 @@ describe("EnterpriseCollectionProvider", () => {
 
         const subscription: IEnterpriseSubscription<IMockData> = {
             id: "1",
-            added: (item) => {},
-            removed: (id) => {},
+            added: (item) => { },
+            removed: (id) => { },
             sideEffected: () => {
                 isSideEffected = true;
             },
@@ -285,11 +303,11 @@ describe("EnterpriseCollectionProvider", () => {
         const observable2 = new EnterpriseObservable<IMockData>("sideType");
         observable2.subscribe(subscription);
 
+        (axiosCreate.post as Mock).mockResolvedValueOnce({ data: [], status: HTTP_SUCCESS_CODES[0] })
+
         const request = provider.save({}, (res: IMockData[]) => {
             return res;
         });
-
-        mockAxios.mockResponse({ data: [] });
 
         await request;
 

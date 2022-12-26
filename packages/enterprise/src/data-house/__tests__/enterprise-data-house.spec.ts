@@ -1,5 +1,6 @@
 import { EnterpriseDataHouse } from "../enterprise-data-house";
 import { EnumCacheType, extendArray } from "@pusula/utils";
+import { describe, it, expect } from "vitest";
 
 extendArray();
 
