@@ -15,3 +15,5 @@ export {
     LayoutContainerItemComponent,
     LayoutContainerRowComponent
 };
+
+export { LayoutItem, LayoutRow } from "../lib/layout-row";
