@@ -34,7 +34,7 @@ declare global {
      * Async foreach
      * @param callback
      */
-    forEachAsync(callback: (item: T, index: number, array: T[]) => void): Promise<void>;
+    forEachAsync(callback: (item: T, index: number, array: T[]) => Promise<any>): Promise<void>;
     /**
      * group array to an dictionary
      * @param groupBy predicate for group key
@@ -163,7 +163,7 @@ const forEachAsync = () => {
 
   defineNewMethod("forEachAsync", async function <
     T
-  >(this: T[], callback: (item: T, index: number, array: T[]) => void) {
+  >(this: T[], callback: (item: T, index: number, array: T[]) => Promise<any>) {
     for (let index = 0; index < this.length; index++) {
       await callback(this[index], index, this);
     }
