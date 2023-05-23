@@ -1,6 +1,7 @@
 import { dataGroupUtil } from "../../data-group/data-group.util";
 import { GroupItem, GroupModel } from "../../data-group/data-group.interface";
 import { getPropValue, GetPropValueType } from "../../object-helper/object.helper";
+import { arrayUtils } from "../../array-utils/array-utils";
 
 declare global {
   interface Array<T> {
@@ -113,11 +114,7 @@ const remove = () => {
   if (!!Array.prototype.remove) return;
 
   defineNewMethod("remove", function <T>(this: T[], elem: T): number {
-    let index = this.indexOf(elem);
-    if (index > -1) {
-      this.splice(index, 1);
-    }
-    return index;
+    return arrayUtils.remove(this, elem)
   });
 };
 
@@ -128,12 +125,7 @@ const findRemove = () => {
     T
   >(this: T[], findFunction?: (item: T, index?: number, obj?: Array<T>) => boolean): void {
     if (findFunction) {
-      let foundItems = this.filter(findFunction);
-      if (foundItems.length > 0) {
-        foundItems.forEach((item) => {
-          this.remove(item);
-        });
-      }
+      arrayUtils.findRemove(this, findFunction)
     }
   });
 };
@@ -142,9 +134,7 @@ const pushIf = () => {
   if (!!Array.prototype.pushIf) return;
 
   defineNewMethod("pushIf", function <T>(this: T[], item: T, statement: (item: T[]) => boolean) {
-    if (statement(this)) {
-      this.push(item);
-    }
+    return arrayUtils.pushIf(this, item, statement)
   });
 };
 
@@ -213,14 +203,7 @@ const distinct = () => {
   if (!!Array.prototype.distinct) return;
 
   defineNewMethod("distinct", function <T>(this: T[], getProp?: GetPropValueType<T>) {
-    return this.filter((e: T, index: number, arr: Array<T>) => {
-      if (getProp) {
-        const value = getPropValue(e, getProp);
-
-        return arr.findIndex((item) => getPropValue(item, getProp) === value) === index;
-      }
-      return arr.indexOf(e) === index;
-    });
+    return arrayUtils.distinct(this, getProp)
   });
 };
 
@@ -228,12 +211,7 @@ const mapIf = () => {
   if (!!Array.prototype.mapIf) return;
 
   defineNewMethod("mapIf", function <T, T2>(this: T[], map: (item: T) => T2, condition: (item: T) => boolean) {
-    let res: T2[] = [];
-    for (const item of this) {
-      if (condition(item)) res.push(map(item));
-    }
-
-    return res;
+    return arrayUtils.mapIf(this, map, condition)
   });
 };
 
