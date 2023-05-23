@@ -27,4 +27,4 @@ export { UniqueList, createUniqueList } from "./unique-list/unique-list";
 export { ChainFunctions, type ChainObj, type ChainRing } from "./chain-functions/chain-functions";
 export { type GetPropValueType, getPropValue } from "./object-helper/object.helper";
 export { isFunction } from "./type-check/type-check";
-
+export { arrayUtils } from "./array-utils/array-utils";
