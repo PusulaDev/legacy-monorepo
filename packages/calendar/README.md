@@ -20,6 +20,7 @@ Use calendar-day component for one day.
   :minute-interval="minuteInterval"
   :hour-padding-right="20"
   :is-area-selectable="true"
+  :minutes-render-start-time="minutesRenderStartTime"
 />
 ```
 
@@ -46,7 +47,7 @@ interface CalendarEvent<T = undefined> {
   isBordered?: boolean;
   borderRadius?: string;
   /**
-   * Effects render with collided items 
+   * Effects render with collided items
    */
   position: EnumCalendarDayItemPosition;
   /**
@@ -84,6 +85,7 @@ interface CalendarEvent<T = undefined> {
     isMinutesClickable: boolean;
     isAreaSelectable: boolean;
     newItemPosition: EnumCalendarDayItemPosition;
+    minutesRenderStartTime?: string;
 ```
 
 ## Slots
