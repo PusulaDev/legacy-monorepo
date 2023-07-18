@@ -12,6 +12,7 @@
         :hour-height="hourHeight"
         :minute-interval="minuteInterval"
         :is-minutes-visible="isMinutesVisible"
+        :shift-start-time="shiftStartTime"
       />
 
       <calendar-minutes-container
@@ -33,6 +34,7 @@
         :is-area-selectable="isAreaSelectable"
         :is-actions-disabled="isActionsDisabled"
         :new-item-position="newItemPosition"
+        :shift-start-time="shiftStartTime"
       >
         <template #minute="{ minute, hour }">
           <slot name="minute" :minute="minute" :hour="hour"></slot>
@@ -71,6 +73,7 @@ export default class CalendarDayComponent extends Vue {
   @Prop({ type: Boolean, default: false }) readonly hasHeader: boolean;
   @Prop({ type: String, default: "00:00" }) readonly startTime?: string;
   @Prop({ type: String, default: "23:00" }) readonly endTime?: string;
+  @Prop({ type: String }) readonly shiftStartTime?: string;
   @Prop({ type: Number, default: 100 }) readonly hourHeight: number;
   @Prop({ type: Boolean, default: true }) readonly isHoursVisible: boolean;
   @Prop({ type: Boolean, default: true }) readonly isMinutesVisible: boolean;

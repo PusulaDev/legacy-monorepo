@@ -26,12 +26,12 @@ class CalendarHourLogic {
     return hours;
   }
 
-  createAllMinutes(startTime: string, endTime: string, minuteInterval: number): MinuteInterval[] {
+  createAllMinutes(startTime: string, endTime: string, minuteInterval: number, shiftStart?: string): MinuteInterval[] {
     let minutes: MinuteInterval[] = [];
 
-    const totalMinutes = timeLogic.totalMinutesInTimeSpan(endTime) - timeLogic.totalMinutesInTimeSpan(startTime)
+    let start = shiftStart ?? startTime;
+    const totalMinutes = timeLogic.totalMinutesInTimeSpan(endTime) - timeLogic.totalMinutesInTimeSpan(start)
     const count = Math.floor(totalMinutes / minuteInterval);
-    let start = startTime;
 
     for (let index = 0; index <= count; index++) {
       let to = timeLogic.addMinutesToTimeSpanText(start, minuteInterval)
@@ -48,7 +48,23 @@ class CalendarHourLogic {
       start = to;
 
     }
+    const shiftInterval = timeLogic.totalMinutesInTimeSpan(shiftStart ?? startTime) - timeLogic.totalMinutesInTimeSpan(startTime);
+    if (shiftStart && shiftInterval) this.addShiftInterval({minutes, shiftStart, shiftInterval, startTime});
+    
     return minutes;
+  }
+
+  addShiftInterval(opt: { minutes: MinuteInterval[], shiftStart: string, shiftInterval: number, startTime: string }) {
+      const startHour = opt.startTime.split(":")[0];
+      const startMinute = opt.startTime.split(":")[1];
+
+      opt.minutes.unshift({
+        from: opt.startTime,
+        to: opt.shiftStart,
+        interval: opt.shiftInterval,
+        text: startMinute,
+        hour: {value: +startHour, text: timeLogic.createTwoDigitText(+startHour)}
+      })
   }
 
   mapEvents(items: CalendarEvent[], endTime: string, startTime: string) {

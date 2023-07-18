@@ -93,6 +93,7 @@ export default class CalendarMinutesContainerComponent extends Mixins(
   @Prop({ type: Boolean, default: false }) readonly isAreaSelectable: boolean;
   @Prop({ default: EnumCalendarDayItemPosition.Relative })
   readonly newItemPosition: EnumCalendarDayItemPosition;
+  @Prop({ type: String }) readonly shiftStartTime?: string;
 
   items: CalendarDayItem[] = [];
   allMinutes: MinuteInterval[] = [];
@@ -119,7 +120,8 @@ export default class CalendarMinutesContainerComponent extends Mixins(
     return calendarHourLogic.createAllMinutes(
       this.startTime,
       this.endTime,
-      this.minuteInterval
+      this.minuteInterval,
+      this.shiftStartTime
     );
   }
 

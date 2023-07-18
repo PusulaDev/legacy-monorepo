@@ -32,6 +32,7 @@ export default class CalendarHourHeadersComponent extends Mixins(
   CalendarHourMixin
 ) {
   @Prop({ type: Boolean, default: true }) readonly isMinutesVisible: boolean;
+  @Prop({ type: String }) readonly shiftStartTime?: string;
 
   get computedClass() {
     return { narrow: !this.isMinutesVisible };
@@ -41,7 +42,7 @@ export default class CalendarHourHeadersComponent extends Mixins(
     return (hour: CalendarHour) => {
       return (
         calendarHourLogic
-          .createAllMinutes(this.startTime, this.endTime, this.minuteInterval)
+          .createAllMinutes(this.startTime, this.endTime, this.minuteInterval, this.shiftStartTime)
           .filter((m) => m.hour?.value == hour.value) ?? []
       );
     };
