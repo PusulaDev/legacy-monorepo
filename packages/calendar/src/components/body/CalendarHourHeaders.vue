@@ -1,10 +1,10 @@
 <template>
-  <div class="calendar-hour-headers" :class="computedClass">
+  <div :class="computedClass" class="calendar-hour-headers">
     <div
       v-for="hour in hours"
       :key="hour.value"
-      class="calendar-hour-header"
       :style="computedStyle"
+      class="calendar-hour-header"
     >
       <div class="calendar-hour-header__text">{{ hour.text }}</div>
       <calendar-minute-headers
@@ -17,21 +17,22 @@
   </div>
 </template>
 <script lang="ts">
-import { calendarHourLogic } from "@/logic/calendar-hour.logic";
-import { CalendarHour } from "types/logic";
-import { Component, Mixins, Prop, Vue } from "vue-property-decorator";
-import CalendarHourMixin from "./CalendarHourMixin";
-import CalendarMinuteHeadersComponent from "./CalendarMinuteHeaders.vue";
+import { calendarHourLogic } from '@/logic/calendar-hour.logic';
+import { CalendarHour } from 'types/logic';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
+import CalendarHourMixin from './CalendarHourMixin';
+import CalendarMinuteHeadersComponent from './CalendarMinuteHeaders.vue';
 
 @Component({
   components: {
-    "calendar-minute-headers": CalendarMinuteHeadersComponent,
+    'calendar-minute-headers': CalendarMinuteHeadersComponent,
   },
 })
 export default class CalendarHourHeadersComponent extends Mixins(
   CalendarHourMixin
 ) {
   @Prop({ type: Boolean, default: true }) readonly isMinutesVisible: boolean;
+  @Prop({ type: String }) readonly minutesRenderStartTime?: string;
 
   get computedClass() {
     return { narrow: !this.isMinutesVisible };
@@ -41,15 +42,20 @@ export default class CalendarHourHeadersComponent extends Mixins(
     return (hour: CalendarHour) => {
       return (
         calendarHourLogic
-          .createAllMinutes(this.startTime, this.endTime, this.minuteInterval)
+          .createAllMinutes({
+            startTime: this.startTime,
+            endTime: this.endTime,
+            minuteInterval: this.minuteInterval,
+            minutesRenderStartTime: this.minutesRenderStartTime,
+          })
           .filter((m) => m.hour?.value == hour.value) ?? []
       );
     };
   }
 }
 </script>
-<style scoped lang="scss">
-@import "@/style/definitions.scss";
+<style lang="scss" scoped>
+@import '@/style/definitions.scss';
 
 .calendar-hour-headers {
   .calendar-hour-header {
@@ -67,6 +73,7 @@ export default class CalendarHourHeadersComponent extends Mixins(
       text-align: end;
     }
   }
+
   &.narrow {
     .calendar-hour-header {
       width: 30px;

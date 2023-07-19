@@ -2,62 +2,62 @@
   <div class="calendar-hours">
     <calendar-minute
       v-for="minute in allMinutes"
-      @select-area="selectArea"
-      @select-area-finish="selectAreaFinished"
-      @click="minuteClick"
       :key="`${minute.hour.value}_${minute.text}`"
-      :minute="minute"
-      :is-clickable="isMinutesClickable"
-      :is-area-selectable="isAreaSelectable"
-      :start-time="startTime"
+      :disabled="isActionsDisabled"
       :end-time="endTime"
       :hour-height="hourHeight"
-      :minute-interval="minuteInterval"
-      :disabled="isActionsDisabled"
-      :new-item-position="newItemPosition"
+      :is-area-selectable="isAreaSelectable"
+      :is-clickable="isMinutesClickable"
       :items="items"
+      :minute="minute"
+      :minute-interval="minuteInterval"
+      :new-item-position="newItemPosition"
+      :start-time="startTime"
       :style="minuteStyle(minute.interval)"
       class="calendar-hour__minute"
+      @click="minuteClick"
+      @select-area="selectArea"
+      @select-area-finish="selectAreaFinished"
     >
-      <slot name="minute" :minute="minute" :hour="minute.hour"></slot>
+      <slot :hour="minute.hour" :minute="minute" name="minute"></slot>
     </calendar-minute>
 
     <calendar-item
       v-for="item in items"
       :key="item.id"
-      :item="item"
-      :hour-height="hourHeight"
-      :minute-interval="minuteInterval"
-      :is-clone-visible.sync="isCloneVisible"
       :clone-item.sync="cloneItem"
-      :start-time="startTime"
-      :end-time="endTime"
       :disabled="isActionsDisabled"
-      @move="itemMove"
+      :end-time="endTime"
+      :hour-height="hourHeight"
+      :is-clone-visible.sync="isCloneVisible"
+      :item="item"
+      :minute-interval="minuteInterval"
+      :start-time="startTime"
       @click="itemClick"
       @drop="itemDrop"
+      @move="itemMove"
       @resize="resize"
       @mouse-over="mouseOver"
       @mouse-leave="mouseLeave"
     >
       <template>
-        <slot name="item" :item="item"></slot>
+        <slot :item="item" name="item"></slot>
       </template>
     </calendar-item>
 
     <calendar-item
       v-if="isCloneVisible"
-      is-ghost
       key="ghost"
       :item="cloneItem"
+      is-ghost
     />
   </div>
 </template>
 <script lang="ts">
-import { calendarDayLogic } from "@/logic/calendar-day.logic";
-import { CalendarDayItem } from "types/logic/calendar-day-item";
-import { CalendarEvent } from "types/logic/calendar-event";
-import { calendarHourLogic } from "@/logic/calendar-hour.logic";
+import { calendarDayLogic } from '@/logic/calendar-day.logic';
+import { CalendarDayItem } from 'types/logic/calendar-day-item';
+import { CalendarEvent } from 'types/logic/calendar-event';
+import { calendarHourLogic } from '@/logic/calendar-hour.logic';
 import {
   Component,
   Emit,
@@ -65,19 +65,19 @@ import {
   Prop,
   Vue,
   Watch,
-} from "vue-property-decorator";
-import CalendarHourMixin from "./CalendarHourMixin";
-import CalendarItemComponent from "@/components/item/CalendarItem.vue";
-import { calendarDayItemLogic } from "@/logic/calendar-day-item.logic";
-import { CalendarDayEventOptions } from "../../../types/components/calendar-day-event-options";
-import CalendarMinuteComponent from "./CalendarMinute.vue";
-import { EnumCalendarDayItemPosition } from "../../../types/statics/calendar-day-item-position.enum";
-import { MinuteInterval } from "types/logic";
+} from 'vue-property-decorator';
+import CalendarHourMixin from './CalendarHourMixin';
+import CalendarItemComponent from '@/components/item/CalendarItem.vue';
+import { calendarDayItemLogic } from '@/logic/calendar-day-item.logic';
+import { CalendarDayEventOptions } from '../../../types/components/calendar-day-event-options';
+import CalendarMinuteComponent from './CalendarMinute.vue';
+import { EnumCalendarDayItemPosition } from '../../../types/statics/calendar-day-item-position.enum';
+import { MinuteInterval } from 'types/logic';
 
 @Component({
   components: {
-    "calendar-item": CalendarItemComponent,
-    "calendar-minute": CalendarMinuteComponent,
+    'calendar-item': CalendarItemComponent,
+    'calendar-minute': CalendarMinuteComponent,
   },
 })
 export default class CalendarMinutesContainerComponent extends Mixins(
@@ -93,6 +93,7 @@ export default class CalendarMinutesContainerComponent extends Mixins(
   @Prop({ type: Boolean, default: false }) readonly isAreaSelectable: boolean;
   @Prop({ default: EnumCalendarDayItemPosition.Relative })
   readonly newItemPosition: EnumCalendarDayItemPosition;
+  @Prop({ type: String }) readonly minutesRenderStartTime?: string;
 
   items: CalendarDayItem[] = [];
   allMinutes: MinuteInterval[] = [];
@@ -116,11 +117,12 @@ export default class CalendarMinutesContainerComponent extends Mixins(
   }
 
   get minutes() {
-    return calendarHourLogic.createAllMinutes(
-      this.startTime,
-      this.endTime,
-      this.minuteInterval
-    );
+    return calendarHourLogic.createAllMinutes({
+      startTime: this.startTime,
+      endTime: this.endTime,
+      minuteInterval: this.minuteInterval,
+      minutesRenderStartTime: this.minutesRenderStartTime,
+    });
   }
 
   async mounted() {
@@ -129,7 +131,7 @@ export default class CalendarMinutesContainerComponent extends Mixins(
     this.createItems();
   }
 
-  @Watch("events", { deep: true })
+  @Watch('events', { deep: true })
   onEventsChanged() {
     this.createItems();
   }
@@ -191,7 +193,7 @@ export default class CalendarMinutesContainerComponent extends Mixins(
       collidedItems,
       el,
     };
-    this.$emit("item-click", options);
+    this.$emit('item-click', options);
     this.clearClone();
   }
 
@@ -205,7 +207,7 @@ export default class CalendarMinutesContainerComponent extends Mixins(
       blockingCollidedItems,
       el,
     };
-    this.$emit("item-drop", options);
+    this.$emit('item-drop', options);
     this.clearClone();
   }
 
@@ -217,7 +219,7 @@ export default class CalendarMinutesContainerComponent extends Mixins(
       collidedItems,
       el,
     };
-    this.$emit("item-resize", options);
+    this.$emit('item-resize', options);
     this.clearClone();
   }
 
@@ -237,29 +239,30 @@ export default class CalendarMinutesContainerComponent extends Mixins(
       item,
       collidedItems,
     };
-    this.$emit("area-select", options);
+    this.$emit('area-select', options);
     this.clearClone();
     this.hideClone();
   }
 
   mouseOver(item: CalendarDayItem, el: HTMLElement) {
-    this.$emit("mouse-over", item, el);
+    this.$emit('mouse-over', item, el);
   }
 
   mouseLeave(item: CalendarDayItem, el: HTMLElement) {
-    this.$emit("mouse-leave", item, el);
+    this.$emit('mouse-leave', item, el);
   }
 
   @Emit()
   minuteClick(minute: MinuteInterval) {}
 }
 </script>
-<style scoped lang="scss">
-@import "@/style/definitions.scss";
+<style lang="scss" scoped>
+@import '@/style/definitions.scss';
 
 .calendar-hours {
   flex: 1;
   position: relative;
+
   .calendar-hour__minute {
     box-sizing: border-box;
     display: flex;

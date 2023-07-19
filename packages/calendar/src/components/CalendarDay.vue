@@ -12,6 +12,7 @@
         :hour-height="hourHeight"
         :minute-interval="minuteInterval"
         :is-minutes-visible="isMinutesVisible"
+        :minutes-render-start-time="minutesRenderStartTime"
       />
 
       <calendar-minutes-container
@@ -33,6 +34,7 @@
         :is-area-selectable="isAreaSelectable"
         :is-actions-disabled="isActionsDisabled"
         :new-item-position="newItemPosition"
+        :minutes-render-start-time="minutesRenderStartTime"
       >
         <template #minute="{ minute, hour }">
           <slot name="minute" :minute="minute" :hour="hour"></slot>
@@ -50,27 +52,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import CalendarHourHeadersComponent from "./body/CalendarHourHeaders.vue";
-import CalendarMinutesContainerComponent from "./body/CalendarMinutesContainer.vue";
-import CalendarDayFooterComponent from "./CalendarDayFooter.vue";
-import CalendarDayHeaderComponent from "./CalendarDayHeader.vue";
-import { CalendarDayItem } from "../../types/logic/calendar-day-item";
-import { CalendarEvent } from "../../types/logic/calendar-event";
-import { EnumCalendarDayItemPosition } from "../../types/statics/calendar-day-item-position.enum";
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import CalendarHourHeadersComponent from './body/CalendarHourHeaders.vue';
+import CalendarMinutesContainerComponent from './body/CalendarMinutesContainer.vue';
+import CalendarDayFooterComponent from './CalendarDayFooter.vue';
+import CalendarDayHeaderComponent from './CalendarDayHeader.vue';
+import { CalendarDayItem } from '../../types/logic/calendar-day-item';
+import { CalendarEvent } from '../../types/logic/calendar-event';
+import { EnumCalendarDayItemPosition } from '../../types/statics/calendar-day-item-position.enum';
 
 @Component({
   components: {
-    "calendar-day-header": CalendarDayHeaderComponent,
-    "calendar-minutes-container": CalendarMinutesContainerComponent,
-    "calendar-day-footer": CalendarDayFooterComponent,
-    "calendar-hour-headers": CalendarHourHeadersComponent,
+    'calendar-day-header': CalendarDayHeaderComponent,
+    'calendar-minutes-container': CalendarMinutesContainerComponent,
+    'calendar-day-footer': CalendarDayFooterComponent,
+    'calendar-hour-headers': CalendarHourHeadersComponent,
   },
 })
 export default class CalendarDayComponent extends Vue {
   @Prop({ type: Boolean, default: false }) readonly hasHeader: boolean;
-  @Prop({ type: String, default: "00:00" }) readonly startTime?: string;
-  @Prop({ type: String, default: "23:00" }) readonly endTime?: string;
+  @Prop({ type: String, default: '00:00' }) readonly startTime?: string;
+  @Prop({ type: String, default: '23:00' }) readonly endTime?: string;
+  @Prop({ type: String }) readonly minutesRenderStartTime?: string;
   @Prop({ type: Number, default: 100 }) readonly hourHeight: number;
   @Prop({ type: Boolean, default: true }) readonly isHoursVisible: boolean;
   @Prop({ type: Boolean, default: true }) readonly isMinutesVisible: boolean;
