@@ -1,6 +1,6 @@
 {
   "name": "@pusula/calendar",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "author": "Pusula",
   "scripts": {
     "serve": "vue-cli-service serve",
