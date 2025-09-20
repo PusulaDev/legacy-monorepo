@@ -7,4 +7,5 @@ export interface CaptchaOptions {
     width: number;
     height: number;
     captchaFont: string;
+    isRtl: boolean;
 }

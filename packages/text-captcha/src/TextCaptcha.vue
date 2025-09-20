@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect } from "vue";
-import { CaptchaOptions } from './types';
-import { textCaptchaHelper } from '@/text-captcha.helper';
+import { onMounted, ref, watchEffect, computed } from "vue";
+import { CaptchaOptions, EnumLanguagePrefix } from './types';
+import { textCaptchaHelper } from "@/text-captcha.helper";
 
 const props = withDefaults(
     defineProps<{
         value?: string | null;
+        language?: string | null;
         chars?: string;
         count?: number;
         hideLines?: boolean;
@@ -20,7 +21,8 @@ const props = withDefaults(
     }>(),
     {
         value: "",
-        chars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",//currentCulture chars ını çeken bir yapı
+        language: null,
+        chars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
         count: 5,
         hideLines: false,
         customTextColor: "",
@@ -37,23 +39,21 @@ const emit = defineEmits<{
     (event: "is-valid", value: boolean): void;
     (event: "get-code", value: string): void;
 }>();
-//isRtl true gelirse chars ı arapça yap ayrıca sağdan sola yapmak lazım
 
 const captcha_canvas = ref<HTMLCanvasElement | null>(null);
 const code = ref("");
 
-const toOpts = (): CaptchaOptions => {
-    return {
-        chars: props.chars,
-        count: Number(props.count),
-        hideLines: props.hideLines,
-        customTextColor: props.customTextColor,
-        textColors: props.textColors ?? [],
-        width: Number(props.width ?? Number(props.count) * 30),
-        height: Number(props.height),
-        captchaFont: String(props.captchaFont),
-    };
-};
+const toOpts = (): CaptchaOptions => ({
+    chars: effectiveChars.value,
+    count: Number(props.count),
+    hideLines: props.hideLines,
+    customTextColor: props.customTextColor,
+    textColors: props.textColors ?? [],
+    width: Number(props.width ?? Number(props.count) * 30),
+    height: Number(props.height),
+    captchaFont: String(props.captchaFont),
+    isRtl: isRtl.value,
+});
 
 const generate = () => {
     if (!captcha_canvas.value) return;
@@ -64,13 +64,22 @@ const generate = () => {
 
 const resetCaptcha = () => generate();
 
+const currentLang = computed(() => textCaptchaHelper().normLang(props.language));
+const isRtl = computed(() =>
+    currentLang.value
+        ? textCaptchaHelper().RTL_LANGUAGES.has(currentLang.value as EnumLanguagePrefix)
+        : false
+);
+const effectiveChars = computed(
+  () => textCaptchaHelper().charsForLanguage(currentLang.value) ?? props.chars
+);
 onMounted(() => generate());
 watchEffect(() => emit("is-valid", !!code.value && code.value === (props.value ?? "")));
 defineExpose({ resetCaptcha });
 </script>
 
 <template>
-    <div class="client_recaptcha">
+    <div class="client_recaptcha" :dir="isRtl ? 'rtl' : 'ltr'">
         <div v-if="!hideRefreshIcon" class="client_recaptcha_icon" @click="resetCaptcha">
             <slot name="icon">
                 <svg
@@ -99,7 +108,6 @@ defineExpose({ resetCaptcha });
     justify-content: center;
     flex-direction: row;
 }
-
 .client_recaptcha_icon {
     text-align: center;
     padding: 10px;
