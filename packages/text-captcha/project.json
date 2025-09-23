@@ -7,14 +7,14 @@
     "build": {
       "executor": "@nx/vite:build",
       "options": {
-        "configFile": "packages/text-captcha/vite.config.ts"
+        "configFile": "{projectRoot}/vite.config.ts"
       },
       "outputs": ["{projectRoot}/dist"]
     },
     "serve": {
       "executor": "@nx/vite:dev-server",
       "options": {
-        "configFile": "packages/text-captcha/vite.config.ts"
+        "configFile": "{projectRoot}/vite.config.ts"
       }
     }
   },

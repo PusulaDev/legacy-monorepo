@@ -1,7 +1,8 @@
 {
   "name": "@pusula/text-captcha",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": false,
+  "author": "Pusula",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.cjs",
@@ -16,8 +17,11 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "vue": "^2.7.0",
+    "vue": "2.7.16",
     "vite": "^4.0.3",
-    "@vitejs/plugin-vue2": "^2.3.3"
+    "@vitejs/plugin-vue2": "^2.3.3",
+    "vite-plugin-dts": "^4.5.0",
+    "vue-demi": "^0.14.10",
+    "vue-template-compiler": "2.7.16"
   }
 }
