@@ -1,27 +1,23 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "ESNext",
     "strict": true,
     "declaration": true,
+    "emitDeclarationOnly": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"],
-      "@lib/*": ["*"],
-      "@lib": ["index.ts"],
-      "@/modules/*": ["types/*"]
+      "@lib": ["src/index.ts"],
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.vue",
-    "src/playground/**/*.ts",
-    "src/playground/**/*.vue",
     "shims-vue.d.ts"
   ],
     "exclude": ["node_modules", "dist"]

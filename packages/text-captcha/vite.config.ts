@@ -1,15 +1,24 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue2";
+import dts from "vite-plugin-dts";
 import * as path from "path";
 
 const resolvePath = (str: string) => path.resolve(__dirname, str);
 
 export default defineConfig(({ command }) => ({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    dts({
+      entryRoot: "src",
+      outDir: "dist",
+      tsconfigPath: "tsconfig.json",
+      copyDtsFiles: true,
+      include: ['src/**/*.ts', 'src/**/*.vue', 'shims-vue.d.ts'],
+      exclude: ["src/playground"]
+    })
+  ],
   resolve: {
     alias: {
-      "@": resolvePath("src"),
-      "@/modules": resolvePath("src/types"),
       "@lib": resolvePath("src"),
     },
   },
@@ -21,9 +30,12 @@ export default defineConfig(({ command }) => ({
       formats: ["es", "cjs"],
       fileName: (format) => (format === "es" ? "index.es.js" : "index.cjs"),
     },
+    outDir: "dist",
     rollupOptions: {
-      external: ["vue"],
-      output: { globals: { vue: "Vue" } },
-    },
-  },
+      external: ["vue", "vue-demi"],
+      output: {
+        exports: "named"
+      }
+    }
+  }
 }));

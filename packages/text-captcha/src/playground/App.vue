@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref } from "vue-demi";
 import { TextCaptcha } from "@lib";
 
 const code = ref("");

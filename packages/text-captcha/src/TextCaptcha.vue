@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect, computed } from "vue";
+import { onMounted, ref, watchEffect, computed } from "vue-demi";
 import { CaptchaOptions, EnumLanguagePrefix } from './types';
-import { textCaptchaHelper } from "@/text-captcha.helper";
+import { textCaptchaHelper } from "@lib";
 
 const props = withDefaults(
     defineProps<{
@@ -98,7 +98,7 @@ defineExpose({ resetCaptcha });
             </slot>
         </div>
 
-        <canvas id="captcha_canvas" ref="captcha_canvas" :class="['captcha_canvas', canvasClass]" />
+        <canvas id="captcha_canvas" ref="captcha_canvas" :class="['captcha_canvas', canvasClass]" ></canvas>
     </div>
 </template>
 
