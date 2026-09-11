@@ -502,3 +502,9 @@ class EnterpriseMapper<TModel, TViewModel> {
 set jest.pathToJest settings :
 
 "jest.pathToJest": "lerna run test --stream --"
+
+## License
+
+Copyright (c) 2026 Pusula.
+
+Licensed under the [MIT License](./LICENSE).

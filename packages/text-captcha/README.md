@@ -218,7 +218,9 @@ PRs are welcome!
 
 ## 📄 License
 
-MIT
+Copyright (c) 2026 Pusula.
+
+Licensed under the [MIT License](./LICENSE).
 
 ---
 

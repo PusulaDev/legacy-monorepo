@@ -1,6 +1,6 @@
 {
   "name": "@pusula/sync-data",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Sync data between classes, functions",
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
