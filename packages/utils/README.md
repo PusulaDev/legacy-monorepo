@@ -331,3 +331,9 @@ filterByExcludesCollection<T2>(getProp: (item: T) => T2, collection: T2[]): T[];
 findByCollection<T2>(getProp: (item: T) => T2, collection: T2[]): T;
 
 ```
+
+## License
+
+Copyright (c) 2026 Pusula.
+
+Licensed under the [ISC License](./LICENSE).

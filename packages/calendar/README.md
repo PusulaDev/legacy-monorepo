@@ -113,3 +113,9 @@ yarn build
 ```
 yarn test:unit
 ```
+
+## License
+
+Copyright (c) 2026 Pusula.
+
+Licensed under the [MIT License](./LICENSE).

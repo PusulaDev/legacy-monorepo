@@ -135,7 +135,10 @@ export default class LayoutContainerComponent extends Vue {
     }
 
     initDragEvents() {
-        this.draggableObj = new Droppable(this.$refs.container, {
+        const container = this.$refs.container;
+        if (!(container instanceof HTMLElement)) return;
+
+        this.draggableObj = new Droppable(container, {
             draggable:
                 ".layout-container__cell.edit-mode > .layout-container__item",
             dropzone: ".layout-container__cell.edit-mode"

@@ -89,5 +89,10 @@ If not get function will be triggered.
 | data            | any    |   result of your action |
 | sideffectedKeys | string[]      |    side effects of your action  |
 
-Before add or get function called , syncCondition function is called as a guard, if exists. 
+Before add or get function called , syncCondition function is called as a guard, if exists.
 
+## License
+
+Copyright (c) 2026 Pusula.
+
+Licensed under the [ISC License](./LICENSE).

@@ -1,6 +1,6 @@
 {
     "name": "@pusula/enterprise",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "main": "./dist/index.umd.cjs",
     "module": "./dist/index.js",
     "type": "module",

@@ -90,3 +90,9 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## License
+
+Copyright (c) 2026 Pusula.
+
+Licensed under the [MIT License](./LICENSE).
